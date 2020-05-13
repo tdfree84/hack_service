@@ -3,6 +3,7 @@ from flask import abort, Flask, json, redirect,\
 import jinja2
 import json
 import sqlite3
+from random import shuffle
 
 app = Flask(__name__)
 app.secret_key = 'hahahahhahahahahah'
@@ -17,6 +18,41 @@ def index():
 
     return render_template('index.html', 
             logged_in = True)
+
+@app.route('/search_users', methods=["POST"])
+def search_users():
+    # Get (probably bad) username from form
+    data = request.form # get data
+    print(f"data {data}")
+    user = data['username']
+
+    # Horrible hacking going on here
+    conn = sqlite3.connect('database.db')
+    cur = conn.cursor()
+    script = " SELECT username, password from customers where "
+    script += "username = \'" + user + "\';"
+    print(f"script: {script}")
+    cur.execute(script) # Terrible practice
+    rows = cur.fetchall()  # Yikes
+    print(f"rows queried: {rows}")
+    if len(rows) == 0:
+        print("sending with 0 found")
+        return render_template('index.html', logged_in = True)
+        
+    r = {}
+    l = []
+    for row in rows:
+        r = {}
+        r['username'] = row[0]
+        r['password'] = row[1]
+        l.append(r)
+
+    shuffle(l)
+
+    cur.close()
+    conn.close()
+
+    return render_template('index.html', users = l, logged_in = True)
 
 
 @app.route('/signin', methods=["POST"])

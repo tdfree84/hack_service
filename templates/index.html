@@ -9,7 +9,24 @@
     <h1> Hackable Bank </h1>
         <div class="stack_center" id="logging_tools">
             {% if logged_in %}
-            <button onclick="sign_out()" id="sign_out_button">Logout</button>
+                {% if is_admin %}
+                    <button onclick="give_me_flag()" id="flag_button">FLAG ME</button>
+                {% endif %}
+                <button onclick="sign_out()" id="sign_out_button">Logout</button>
+                <br/>
+                <br/>
+
+                <p>Search for users to send money to.</p>
+                <form action="{{ url_for('search_users') }}" method="POST">
+                    <input type="text" name="username">
+                    <input type="submit">
+                </form>
+
+                {% if users %}
+                    {% for user in users %}
+                        <p>{{ user.username}} | {{user.password}} </p>
+                    {% endfor %}
+                {% endif %}
             {% endif %}
 
             {% if not logged_in %}
