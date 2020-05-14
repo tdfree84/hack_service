@@ -10,12 +10,14 @@ app.secret_key = 'hahahahhahahahahah'
 
 @app.route('/')
 def index():
+    # If the user is not logged in
     try:
         if session['logged_in']:
             pass
     except:
         return render_template('index.html', logged_in = False)
 
+    # Must be logged in, check if admin
     try:
         if session['is_admin']:
             return render_template('index.html', 
@@ -25,48 +27,76 @@ def index():
         return render_template('index.html', 
                 logged_in = True)
 
+
+@app.route('/flag_me', methods=["POST"])
+def send_flag():
+    # Must be logged in, check if admin
+    try:
+        if session['is_admin']:
+            return 'CONGRATS, you found the flag.'
+    except:
+        return render_template('index.html', 
+                logged_in = True)
+
+
 @app.route('/search_users', methods=["POST"])
 def search_users():
+    '''
+        This query is hackable if the user enters
+        [ anything' or '1' = '1 ]
+        This will query every user in the database.
+        Trying to run another query will not work due to sqlite3
+            error on trying to run multiple queries at once.
+        The hacker then needs to find the admin password in the list.
+        Using the admin's password, they must logout of current session,
+            login as admin,
+            click FLAGME.
+    '''
+
     # Get (probably bad) username from form
     data = request.form # get data
-    print(f"data {data}")
     user = data['username']
 
-    if user == 'admin' or user == 'administrator':
+    # Stop simple admin lookup by saying no to admin query
+    if 'admin' in user:
         return render_template('index.html', 
                 logged_in = True,
                 error = 'You can\'t look up the admin.')
         
 
-    # Horrible hacking going on here
     conn = sqlite3.connect('database.db')
     cur = conn.cursor()
+
+    # Horrible programming practice here #
     script = " SELECT username, password from customers where "
-    script += "username = \'" + user + "\';"
-    print(f"script: {script}")
-    cur.execute(script) # Terrible practice
-    rows = cur.fetchall()  # Yikes
-    print(f"rows queried: {rows}")
+    # Let the user's input be injected right into the query!! :((
+    script += "username = \'" + user + "\';" 
+
+    cur.execute(script) # Terrible. Run the query. Yikes
+    rows = cur.fetchall()
+
+    # If the search found nothing
     if len(rows) == 0:
-        print("sending with 0 found")
         return render_template('index.html', 
                 logged_in = True,
-                error = 'No users found.')
+                error = 'No users found.') # Error message
         
-    r = {}
-    l = []
+    # Serialize the results
+    l = [] # List of dictionaries
     for row in rows:
         r = {}
         r['username'] = row[0]
         r['password'] = row[1]
         l.append(r)
 
-    shuffle(l)
+    shuffle(l) # Randomize the results so admin isn't at top
 
     cur.close()
     conn.close()
 
-    return render_template('index.html', users = l, logged_in = True)
+    return render_template('index.html', 
+            users = l, # User list
+            logged_in = True)
 
 
 @app.route('/signin', methods=["POST"])
@@ -80,6 +110,7 @@ def signin():
     conn = sqlite3.connect('database.db')
     cur = conn.cursor()
     exi = False
+    # Securely lookup user with prepared statement
     cur.execute(' SELECT username, password from customers where\
             username=? ', (user, ))
     rows = cur.fetchone()
@@ -92,12 +123,15 @@ def signin():
         return abort(400)
     else: # They exist, check credentials
         if psw == rows[1]: # Compare passwords
+            # Reset admin token
             try:
                 del session['is_admin']
             except:
                 pass
+            # Check if they are admin
             if user == 'admin':
                 session['is_admin'] = True
+
             session['logged_in'] = True
             session.modified = True
             print("User [{}] signing in".format(user))
@@ -126,6 +160,8 @@ def register():
     conn = sqlite3.connect('database.db')
     cur = conn.cursor()
     exi = True
+
+    # Securely lookup user with prepared statement
     cur.execute(' SELECT username, password from customers where\
             username=? ', (user, ))
     rows = cur.fetchone()
@@ -139,6 +175,8 @@ def register():
         return abort(400)
     else: # User doesn't exist, register them
         psw = data['psw']
+
+        # Securely enter the new user with prepared statements
         cur.execute(' INSERT INTO customers (username, password) values \
                 (?, ?)', (user, psw))
         conn.commit()

@@ -1,3 +1,15 @@
+function give_me_flag() {
+    // Send data to log in
+    $.ajax({
+            type: 'POST',
+            url: '/flag_me',
+            success: function(response) {
+                alert(response);
+            }
+            });
+
+}
+
 function sign_in() {
     var user = document.getElementById("uname").value;
     var pass = document.getElementById("psw").value;
