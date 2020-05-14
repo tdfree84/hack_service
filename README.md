@@ -32,3 +32,7 @@ Setup:
 1. `pipenv install`
 1. `pipenv shell`
 1. TO RUN: `./scripts/run` [_Set port in app.py_](https://github.com/tdfree84/hack_service/blob/f70caffd0fe6dbe4c1e450022deba5549cc7aad4/app.py#L192)
+
+
+### Extra
+The files `ns.txt`, `ps.txt`, and `init.py` are used to setup the `sqlite3` database. `ns.txt` is filled with random names. `ps.txt` is filled with very common passwords. `init.py` uses these two files to generate _random_ users for the website. It generates 100 to be exact. The admin user is a plus one -- 101 users in total.
