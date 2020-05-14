@@ -19,3 +19,10 @@ Certainly, the `user_input` being injected right into the query is trouble some.
 
 ### The flag
 Currently, there is a simple response sent back to the user. The user is alerted with an alert box of the flag. To put your CTF contest's flag, use this method to set the flag -> [set flag method](https://github.com/tdfree84/hack_service/blob/d8520bb62915356077b30f5824ec0ed21d7f41f1/app.py#L32)
+
+### Dev/Setup
+1. `git clone https://github.com/tdfree84/hack_service.git`
+1. `cd hack_service`
+1. `pipenv install`
+1. `pipenv shell`
+1. TO RUN: `./scripts/run` _Set port in app.py_
