@@ -36,3 +36,8 @@ Setup:
 
 ### Extra
 The files `ns.txt`, `ps.txt`, and `init.py` are used to setup the `sqlite3` database. `ns.txt` is filled with random names. `ps.txt` is filled with very common passwords. `init.py` uses these two files to generate _random_ users for the website. It generates 100 to be exact. The admin user is a plus one -- 101 users in total.
+
+
+### Website
+
+<img src="incredi-safe-bank.PNG?raw=true" width="100%"></img>
