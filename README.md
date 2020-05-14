@@ -25,4 +25,4 @@ Currently, there is a simple response sent back to the user. The user is alerted
 1. `cd hack_service`
 1. `pipenv install`
 1. `pipenv shell`
-1. TO RUN: `./scripts/run` _Set port in app.py_
+1. TO RUN: `./scripts/run` [_Set port in app.py_](https://github.com/tdfree84/hack_service/blob/f70caffd0fe6dbe4c1e450022deba5549cc7aad4/app.py#L192)
