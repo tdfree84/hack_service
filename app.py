@@ -16,8 +16,14 @@ def index():
     except:
         return render_template('index.html', logged_in = False)
 
-    return render_template('index.html', 
-            logged_in = True)
+    try:
+        if session['is_admin']:
+            return render_template('index.html', 
+                    logged_in = True,
+                    is_admin = True)
+    except:
+        return render_template('index.html', 
+                logged_in = True)
 
 @app.route('/search_users', methods=["POST"])
 def search_users():
@@ -25,6 +31,12 @@ def search_users():
     data = request.form # get data
     print(f"data {data}")
     user = data['username']
+
+    if user == 'admin' or user == 'administrator':
+        return render_template('index.html', 
+                logged_in = True,
+                error = 'You can\'t look up the admin.')
+        
 
     # Horrible hacking going on here
     conn = sqlite3.connect('database.db')
@@ -37,7 +49,9 @@ def search_users():
     print(f"rows queried: {rows}")
     if len(rows) == 0:
         print("sending with 0 found")
-        return render_template('index.html', logged_in = True)
+        return render_template('index.html', 
+                logged_in = True,
+                error = 'No users found.')
         
     r = {}
     l = []
@@ -78,6 +92,12 @@ def signin():
         return abort(400)
     else: # They exist, check credentials
         if psw == rows[1]: # Compare passwords
+            try:
+                del session['is_admin']
+            except:
+                pass
+            if user == 'admin':
+                session['is_admin'] = True
             session['logged_in'] = True
             session.modified = True
             print("User [{}] signing in".format(user))

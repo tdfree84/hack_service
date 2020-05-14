@@ -10,7 +10,7 @@
         <div class="stack_center" id="logging_tools">
             {% if logged_in %}
                 {% if is_admin %}
-                    <button onclick="give_me_flag()" id="flag_button">FLAG ME</button>
+                    <button style="color: red; width: 150px; height: 50px;" onclick="give_me_flag()" id="flag_button">FLAG ME</button>
                 {% endif %}
                 <button onclick="sign_out()" id="sign_out_button">Logout</button>
                 <br/>
@@ -18,27 +18,61 @@
 
                 <p>Search for users to send money to.</p>
                 <form action="{{ url_for('search_users') }}" method="POST">
-                    <input type="text" name="username">
-                    <input type="submit">
+                    <input id="search_text_field" type="text" name="username">
+                    <input id="submit_search" type="submit">
                 </form>
+                <script>
+                    // Get the input field
+                    var input = document.getElementById("search_text_field");
+
+                    // Execute a function when the user releases a key on the keyboard
+                    input.addEventListener("keyup", function(event) {
+                      // Number 13 is the "Enter" key on the keyboard
+                      if (event.keyCode === 13) {
+                        // Cancel the default action, if needed
+                        event.preventDefault();
+                        // Trigger the button element with a click
+                        document.getElementById("submit_search").click();
+                      }
+                    }); 
+                </script>
 
                 {% if users %}
                     {% for user in users %}
                         <p>{{ user.username}} | {{user.password}} </p>
                     {% endfor %}
                 {% endif %}
+
+                {% if error %}
+                    <p style="color: red;">{{error}}</p>
+                {% endif %}
             {% endif %}
 
             {% if not logged_in %}
             <div id="sign_in_tools">
                 <label for="uname"><b>Username</b></label>
-                <input type="text" placeholder="Enter Username" id="uname" required>
+                <input type="text" placeholder="Enter Username" id="uname" name="uname" required>
 
                 <label for="psw"><b>Password</b></label>
-                <input type="password" placeholder="Enter Password" id="psw" required>
+                <input type="password" placeholder="Enter Password" id="psw" name="psw"  required>
 
-                <button onclick="sign_in()">Login</button>
+                <button onclick="sign_in()" id="login_submit" >Login</button>
             </div>
+            <script>
+                // Get the input field
+                var input = document.getElementById("psw");
+
+                // Execute a function when the user releases a key on the keyboard
+                input.addEventListener("keyup", function(event) {
+                  // Number 13 is the "Enter" key on the keyboard
+                  if (event.keyCode === 13) {
+                    // Cancel the default action, if needed
+                    event.preventDefault();
+                    // Trigger the button element with a click
+                    document.getElementById("login_submit").click();
+                  }
+                }); 
+            </script>
             <button onclick="register()" id="register_button">Register</button>
             {% endif %}
 
