@@ -40,4 +40,4 @@ The files `ns.txt`, `ps.txt`, and `init.py` are used to setup the `sqlite3` data
 
 ### Website
 
-<img src="incredi-safe-bank.PNG?raw=true" width="100%"></img>
+<img src="incredi-safe-bank.png?raw=true" width="100%"></img>
