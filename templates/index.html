@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+  {% include 'static/header.html' %}
+  <body>
+    <div class="stack_center" id="content">
+
+    <h1> Incredi-Safe Bank </h1>
+        <p style="color: green;"> <i> $$$ Where your money belongs $$$ </i></p>
+        <div class="stack_center" id="logging_tools">
+            {% if logged_in %}
+                {% if is_admin %}
+                    <button style="color: red; width: 150px; height: 50px;" onclick="give_me_flag()" id="flag_button">FLAG ME</button>
+                {% endif %}
+                <button onclick="sign_out()" id="sign_out_button">Logout</button>
+                <br/>
+                <br/>
+
+                <p>Search for users to send money to.</p>
+                <form action="{{ url_for('search_users') }}" method="POST">
+                    <input id="search_text_field" type="text" name="username">
+                    <input id="submit_search" type="submit">
+                </form>
+                <script>
+                    // Get the input field
+                    var input = document.getElementById("search_text_field");
+
+                    // Execute a function when the user releases a key on the keyboard
+                    input.addEventListener("keyup", function(event) {
+                      // Number 13 is the "Enter" key on the keyboard
+                      if (event.keyCode === 13) {
+                        // Cancel the default action, if needed
+                        event.preventDefault();
+                        // Trigger the button element with a click
+                        document.getElementById("submit_search").click();
+                      }
+                    }); 
+                </script>
+
+                {% if users %}
+                    {% for user in users %}
+                        <p>{{ user.username}} | {{user.password}} </p>
+                    {% endfor %}
+                {% endif %}
+
+                {% if error %}
+                    <p style="color: red;">{{error}}</p>
+                {% endif %}
+            {% endif %}
+
+            {% if not logged_in %}
+            <div id="sign_in_tools">
+                <label for="uname"><b>Username</b></label>
+                <input type="text" placeholder="Enter Username" id="uname" name="uname" required>
+
+                <label for="psw"><b>Password</b></label>
+                <input type="password" placeholder="Enter Password" id="psw" name="psw"  required>
+
+                <button onclick="sign_in()" id="login_submit" >Login</button>
+            </div>
+            <script>
+                // Get the input field
+                var input = document.getElementById("psw");
+
+                // Execute a function when the user releases a key on the keyboard
+                input.addEventListener("keyup", function(event) {
+                  // Number 13 is the "Enter" key on the keyboard
+                  if (event.keyCode === 13) {
+                    // Cancel the default action, if needed
+                    event.preventDefault();
+                    // Trigger the button element with a click
+                    document.getElementById("login_submit").click();
+                  }
+                }); 
+            </script>
+            <button onclick="register()" id="register_button">Register</button>
+            {% endif %}
+
+        </div>
+
+        <div id="added_stuff">
+            <br/>
+            <center>
+                <p> Welcome to the safest banking website. We spent most of our money
+                (not on) security. This way you can have the best experience.</p>
+                <p> If you notice anything wrong, please submit a note to our support page. </p>
+                <p> Anyway, register for an account and get started! </p>
+                <p><b> Be careful looking up users to send money to, rumor has it the developer
+                    accidently included some stuff!</b> </p>
+                <p> Please watch this short video before submitting a tip ->
+                    <a href="https://youtu.be/SkgTxQm9DWM"> A quick watch </a> </p>
+                <h5> If you are still interested in us, here is a ticker tape </h5>
+                <!-- TradingView Widget BEGIN -->
+                <div class="tradingview-widget-container">
+                  <div class="tradingview-widget-container__widget"></div>
+                  <div class="tradingview-widget-copyright"><a href="https://www.tradingview.com" rel="noopener" target="_blank"><span class="blue-text">Ticker Tape</span></a> by TradingView</div>
+                  <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
+                      {
+                      "symbols": [
+                        {
+                          "proName": "FOREXCOM:SPXUSD",
+                          "title": "S&P 500"
+                        },
+                        {
+                          "proName": "FOREXCOM:NSXUSD",
+                          "title": "Nasdaq 100"
+                        },
+                        {
+                          "proName": "FX_IDC:EURUSD",
+                          "title": "EUR/USD"
+                        },
+                        {
+                          "proName": "BITSTAMP:BTCUSD",
+                          "title": "BTC/USD"
+                        },
+                        {
+                          "proName": "BITSTAMP:ETHUSD",
+                          "title": "ETH/USD"
+                        }
+                      ],
+                      "colorTheme": "light",
+                      "isTransparent": false,
+                      "displayMode": "adaptive",
+                      "locale": "en"
+                    }
+                  </script>
+                </div>
+                <!-- TradingView Widget END -->
+                <br/>
+                <br/>
+                <h3> Banking Solutions </h3>
+                <p> Our banking solutions will certainly put your money in the best position. </p>
+                <p> That position would be our pocket. </p>
+                <p> BUT! Rest assured, it is safe there. </p>
+                <br/>
+                <h3> Calculate some interest </h3>
+                <script type="text/javascript" src="//100widgets.com/js_data.php?id=269"></script>
+                <br/>
+                <h2> TIME IS MONEY </h2>
+                <iframe src="http://clock.zone/widget/digit.php?timezone=America/Chicago&showsec=1&weekday=1&h24=1&bgcol=0F0&fontcol=000&title=Time is MONEY" width="220" height="110" frameborder="1"></iframe>
+                <br/>
+                <h5> Just in case you were wondering </h5>
+                <script type="text/javascript" src="//100widgets.com/js_data.php?id=75"></script>
+                <br/>
+                <h3> Use our built in calculator to calculate how much money you lost </h3>
+                <script type="text/javascript" src="//100widgets.com/js_data.php?id=276"></script>
+                
+
+            </center>
+        </div>
+        
+    </div>
+
+  	{% include 'static/footer.html' %}
+  </body>
+</html>
