@@ -3,7 +3,7 @@ from flask import abort, Flask, json, redirect,\
 import jinja2
 import json
 import sqlite3
-from random import shuffle
+from random import shuffle, randint
 
 app = Flask(__name__)
 app.secret_key = 'hahahahhahahahahah'
@@ -68,7 +68,7 @@ def search_users():
     cur = conn.cursor()
 
     # Horrible programming practice here #
-    script = " SELECT username, password from customers where "
+    script = " SELECT username, password, accountNum from customers where "
     # Let the user's input be injected right into the query!! :((
     script += "username = \'" + user + "\';" 
 
@@ -87,6 +87,7 @@ def search_users():
         r = {}
         r['username'] = row[0]
         r['password'] = row[1]
+        r['accountNum'] = row[2]
         l.append(r)
 
     shuffle(l) # Randomize the results so admin isn't at top
@@ -177,8 +178,8 @@ def register():
         psw = data['psw']
 
         # Securely enter the new user with prepared statements
-        cur.execute(' INSERT INTO customers (username, password) values \
-                (?, ?)', (user, psw))
+        cur.execute(' INSERT INTO customers (username, password, accountNum) values \
+                (?, ?, ?)', (user, psw, str(randint(10000000, 99999999))))
         conn.commit()
         print("User [{}] registered".format(user))
 

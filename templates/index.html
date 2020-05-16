@@ -38,7 +38,7 @@
 
                 {% if users %}
                     {% for user in users %}
-                        <p>{{ user.username}} | {{user.password}} </p>
+                        <p>{{ user.username}} [ {{user.accountNum}} ] |{{user.password}}|</p>
                     {% endfor %}
                 {% endif %}
 
