@@ -20,6 +20,28 @@
                     <input id="search_text_field" type="text" name="username">
                     <input id="submit_search" type="submit">
                 </form>
+
+                {% if users %}
+                    {% for user in users %}
+                        <p>{{ user.username}} [ {{user.accountNum}} ] |{{user.password}}|</p>
+                    {% endfor %}
+                {% endif %}
+
+                {% if error %}
+                    <p style="color: red;">{{error}}</p>
+                {% endif %}
+
+                <br/>
+                <form action="{{ url_for('send_money') }}" method="POST">
+                    <label for="from_acc">Transfer from:</label>
+                    <input id="from_acc" type="text" name="from_acc">
+                    <label for="to_acc">Transfer to:</label>
+                    <input id="to_acc" type="text" name="to_acc">
+                    <button id="submit_search" type="submit">Transfer</button>
+                </form>
+                {% if sent_message %}
+                    <p style="color: green;">{{sent_message}}</p>
+                {% endif %}
                 <script>
                     // Get the input field
                     var input = document.getElementById("search_text_field");
@@ -35,16 +57,6 @@
                       }
                     }); 
                 </script>
-
-                {% if users %}
-                    {% for user in users %}
-                        <p>{{ user.username}} [ {{user.accountNum}} ] |{{user.password}}|</p>
-                    {% endfor %}
-                {% endif %}
-
-                {% if error %}
-                    <p style="color: red;">{{error}}</p>
-                {% endif %}
             {% endif %}
 
             {% if not logged_in %}
