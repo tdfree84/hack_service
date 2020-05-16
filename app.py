@@ -39,6 +39,12 @@ def send_flag():
                 logged_in = True)
 
 
+@app.route('/send_money', methods=["POST"])
+def send_money():
+    return render_template('index.html',
+            logged_in = True,
+            sent_message = 'Transferred!')
+
 @app.route('/search_users', methods=["POST"])
 def search_users():
     '''
