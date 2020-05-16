@@ -18,7 +18,7 @@ except:
 # Create the table
 try:
     conn.execute(' DROP TABLE if exists customers ')
-    conn.execute(' CREATE TABLE customers (username TEXT, password TEXT) ')
+    conn.execute(' CREATE TABLE customers (username TEXT, password TEXT, accountNum INTEGER) ')
     print("Table added...")
 except:
     raise Exception("Could not create table")
@@ -42,16 +42,18 @@ try:
         extra_names += random.choice(ns)
         extra_names += '\', \''
         extra_names += random.choice(ps)
+        extra_names += '\','
+        extra_names += str(random.randint(10000000,99999999))
         if i == MAX-1:
-            extra_names += '\')'
+            extra_names += ')'
         else:
-            extra_names += '\'), '
+            extra_names += '), '
 
     # Set admin pass
     admin_pass = random.choice(ps)
 
-    conn.execute(' INSERT INTO customers (username, password) values \
-            (\'admin\', \''+admin_pass+'\'),'\
+    conn.execute(' INSERT INTO customers (username, password, accountNum) values \
+            (\'admin\', \''+admin_pass+'\', 12345678),'\
             +extra_names)
 
     conn.commit()
